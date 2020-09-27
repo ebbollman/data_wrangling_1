@@ -105,4 +105,14 @@ mutate(
   group = str_to_lower(group))
 ```
 
+## `arrange`
+
+Can occasionally be helpful to arrange dataset in a certain way if want to examine it
+```{r}
+arrange(litters_df, pups_born_alive)
+```
+
+```{r}
+arrange(litters_df, pups_born_alive, gd0_weight)
+```
 
