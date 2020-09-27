@@ -35,3 +35,20 @@ Skim function to look globally at data.
 skimr::skim(litters_df)
 ```
 
+## Options to read cvs
+
+These options can be helpful if data csv has blank initial rows, or if columns not variable names.
+Therefore, can skip rows.
+```{r}
+litters_df = read_csv("./data/FAS_litters.csv", skip = 10, col_names = FALSE)
+litters_df
+```
+
+This can be helpful if need to recognize multiple missing values.
+```{r}
+litters_df = read_csv("./data/FAS_litters.csv", na = c("", "NA", 999))
+litters_df
+```
+
+Check out `?read_csv()` for more options. 
+
