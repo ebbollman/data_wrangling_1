@@ -87,3 +87,40 @@ analysis_result %>%
     ##   <chr>     <dbl> <dbl>
     ## 1 treatment   4       8
     ## 2 placebo     3.5     4
+
+## Binding rows
+
+Problem of merging data tables in LOTR word dataset. male/female should
+be values in single variable, but spread across 3 tables.
+
+Use LotR data.
+
+Step 1: import each table.
+
+``` r
+fellowship_ring = 
+  readxl::read_excel("./data/LotR_Words.xlsx", range = "B3:D6") %>% 
+  mutate(movie = "fellowship_ring")
+
+two_towers = 
+  readxl::read_excel("./data/LotR_Words.xlsx", range = "F3:H6") %>% 
+  mutate(movie = "two_towers")
+
+return_king = 
+  readxl::read_excel("./data/LotR_Words.xlsx", range = "J3:L6") %>% 
+  mutate(movie = "return_king")
+```
+
+Bind all the rows together (stack these 3 datasets)
+
+``` r
+lotr_tidy = 
+  bind_rows(fellowship_ring, two_towers, return_king) %>%
+  janitor::clean_names() %>% 
+  relocate(movie) %>% 
+  pivot_longer(
+    female:male,
+    names_to = "sex",
+    values_to = "words"
+  )
+```
