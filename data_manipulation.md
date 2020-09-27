@@ -449,3 +449,59 @@ arrange(litters_df, pups_born_alive, gd0_weight)
     ## 10 Low7  #112                23.9        40.5          19               6
     ## # … with 39 more rows, and 2 more variables: pups_dead_birth <dbl>,
     ## #   pups_survive <dbl>
+
+## `%>%`
+
+What if want to import dataset, then clean names, then select some
+variables, then mutate and then filter… all at once?
+
+What we do NOT want to do
+
+``` r
+litters_data_raw = read_csv("./data/FAS_litters.csv")
+```
+
+    ## Parsed with column specification:
+    ## cols(
+    ##   Group = col_character(),
+    ##   `Litter Number` = col_character(),
+    ##   `GD0 weight` = col_double(),
+    ##   `GD18 weight` = col_double(),
+    ##   `GD of Birth` = col_double(),
+    ##   `Pups born alive` = col_double(),
+    ##   `Pups dead @ birth` = col_double(),
+    ##   `Pups survive` = col_double()
+    ## )
+
+``` r
+litters_clean_name = janitor::clean_names(litters_data_raw)
+litters_data_selected = select(litters_clean_name, -pups_survive)
+litters_mutated = mutate(litters_data_selected, wt_gain = gd18_weight - gd0_weight)
+litters_without_missing = drop_na(litters_mutated, gd0_weight)
+```
+
+What to do instead - PIPE OPERATOR
+
+``` r
+litters_df = 
+  read_csv("./data/FAS_litters.csv") %>% 
+  janitor::clean_names() %>% 
+  select(-pups_survive) %>% 
+  mutate(wt_gain = gd18_weight - gd0_weight) %>% 
+  drop_na(gd0_weight)
+```
+
+    ## Parsed with column specification:
+    ## cols(
+    ##   Group = col_character(),
+    ##   `Litter Number` = col_character(),
+    ##   `GD0 weight` = col_double(),
+    ##   `GD18 weight` = col_double(),
+    ##   `GD of Birth` = col_double(),
+    ##   `Pups born alive` = col_double(),
+    ##   `Pups dead @ birth` = col_double(),
+    ##   `Pups survive` = col_double()
+    ## )
+
+Can be more specific about where the results of steps in pipe operator
+will enter in subsequent code step.
